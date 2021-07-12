@@ -11,6 +11,7 @@ class Advertiser(BaseAdvertising):
 
 
 class Ad(BaseAdvertising):
-    title = models.IntegerField(max_length=30)
+    ad_owner = models.ForeignKey(Advertiser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=30)
     link = models.URLField()
     img_url = models.URLField()
