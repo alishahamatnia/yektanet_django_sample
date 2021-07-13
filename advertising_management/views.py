@@ -1,6 +1,7 @@
-from django.views.generic import TemplateView
+from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView, RedirectView
 
-from advertising_management.models import Advertiser
+from advertising_management.models import Advertiser, Ad
 
 
 class ShowAdView(TemplateView):
@@ -8,4 +9,20 @@ class ShowAdView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = {'advertisers': Advertiser.objects.all()}
+        for advertiser in Advertiser.objects.all():
+            for ad in advertiser.ads.all():
+                ad.inc_views()
+                advertiser.inc_views()
         return context
+
+
+class RedirectToAdLinkView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = 'advertiser'
+
+    def get_redirect_url(self, *args, **kwargs):
+        ad = get_object_or_404(Ad, pk=kwargs['pk'])
+        ad.inc_clicks()
+        ad.ad_owner.inc_clicks()
+        return ad.link

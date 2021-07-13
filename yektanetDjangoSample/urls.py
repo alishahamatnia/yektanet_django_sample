@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = (
-    path('advertising_managment/', include('advertising_management.urls')),
+
+
+    path('advertising_management/', include('advertising_management.urls')),
     path('admin/', admin.site.urls),
+
 )
