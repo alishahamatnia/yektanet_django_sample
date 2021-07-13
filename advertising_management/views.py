@@ -1,14 +1,11 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 
-from django.views import View
 from advertising_management.models import Advertiser
 
 
-class ShowAdView(View):
+class ShowAdView(TemplateView):
     template_name = 'ads.html'
 
-    def get(self, request, *args, **kwargs):
-        advertisers = Advertiser.objects.all()
-
-        return render(request=request, template_name=self.template_name,
-                      context={'advertisers': advertisers})
+    def get_context_data(self, **kwargs):
+        context = {'advertisers': Advertiser.objects.all()}
+        return context
