@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import TemplateView, RedirectView, CreateView
 
 from advertising_management.models import Advertiser, Ad
 
@@ -26,3 +26,12 @@ class RedirectToAdLinkView(RedirectView):
         ad.inc_clicks()
         ad.ad_owner.inc_clicks()
         return ad.link
+
+
+class CreateAdView(CreateView):
+    model = Ad
+    fields = ['title', 'link', 'img_url', 'ad_owner']
+    def get_success_url(self):
+        return '/advertising_management/ads'
+    template_name = 'create_form_template.html'
+
