@@ -31,7 +31,8 @@ class RedirectToAdLinkView(RedirectView):
 class CreateAdView(CreateView):
     model = Ad
     fields = ['title', 'link', 'img_url', 'ad_owner']
+
     def get_success_url(self):
         return '/advertising_management/ads'
-    template_name = 'create_form_template.html'
 
+    template_name = 'create_form_template.html'
