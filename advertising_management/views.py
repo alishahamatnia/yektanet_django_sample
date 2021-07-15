@@ -1,7 +1,10 @@
+import json
 from datetime import time, datetime
 
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, RedirectView, CreateView
+from django.views import View
+from django.views.generic import TemplateView, RedirectView, CreateView, DetailView
 
 from advertising_management.models import Advertiser, Ad, Seen, Click
 
@@ -51,3 +54,41 @@ class CreateAdView(CreateView):
         return '/advertising_management/ads'
 
     template_name = 'create_form_template.html'
+
+
+class GetReportView(View):
+    def get(self, *args, **kwargs):
+        ans = {'ad_click_views': '', 'ad_click_per_view': ''}
+        for ad in Ad.objects.all():
+            ans['ad_click_views'] += str((self.calculate_ad_views_and_clicks(ad))) + ','
+        res = self.order_by_click_per_view()
+        for i in res:
+            ans['ad_click_per_view'] += str(res)
+        ans['              time             '] = self.calculate_average()
+        return HttpResponse(content=ans.items())
+
+    def calculate_ad_views_and_clicks(self, ad: Ad):
+        return str({'ad': ad.id[0], 'ad_views': ad.view_count, 'ad_clicks': ad.click_count})
+
+    def order_by_click_per_view(self):
+        return Ad.objects.all().order_by('-click_per_view')
+
+    def calculate_average(self):
+        clicks = Click.objects.all().order_by('-time_clicked')
+        views_ = Seen.objects.all().order_by('-time_showed')
+        i = j = 0
+        pending = True
+        ans = 0
+        while i != len(clicks):
+            if i >= len(clicks) or j >= len(views_):
+                break
+            if views_[j].time_showed < clicks[i].time_clicked and pending:
+                ans += clicks[i].time_clicked.timestamp - views_[j].time_showed.timestamp
+                pending = False
+            elif not pending:
+                i += 1
+                pending = 1
+            elif j < len(views_):
+                j += 1
+
+        return ans
