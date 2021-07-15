@@ -47,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'advertising_management.middleware.get_ip_middleware.GetIPMiddleware',
 ]
 
 ROOT_URLCONF = 'yektanetDjangoSample.urls'

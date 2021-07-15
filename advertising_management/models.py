@@ -24,5 +24,5 @@ class Click(models.Model):
 
 class Seen(models.Model):
     seen_ad = models.ForeignKey(BaseAdvertising, on_delete=models.CASCADE)
-    clicked_by_ip = models.CharField(max_length=16)
-    time_clicked = models.DateTimeField(auto_now=True)
+    seen_by_ip = models.GenericIPAddressField()
+    time_showed = models.DateTimeField(auto_now=True)
