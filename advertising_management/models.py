@@ -14,6 +14,7 @@ class Ad(BaseAdvertising):
     title = models.CharField(max_length=30)
     link = models.URLField()
     img_url = models.URLField()
+    is_approved = models.BooleanField(default=False)
 
 
 class Click(models.Model):
