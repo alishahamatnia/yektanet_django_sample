@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 
@@ -18,12 +20,14 @@ class Ad(BaseAdvertising):
 
 
 class Click(models.Model):
-    clicked_on = models.ForeignKey(BaseAdvertising, on_delete=models.CASCADE, related_name='clicks')
+    clicked_on = models.ForeignKey(BaseAdvertising, on_delete=models.CASCADE, related_name='clicks',
+                                   related_query_name='clicks')
     clicked_by_ip = models.CharField(max_length=16)
     time_clicked = models.DateTimeField(auto_now=True)
 
 
 class Seen(models.Model):
-    seen_ad = models.ForeignKey(BaseAdvertising, on_delete=models.CASCADE)
+    seen_ad = models.ForeignKey(BaseAdvertising, on_delete=models.CASCADE, related_name='ad_views',
+                                related_query_name='ad_views')
     seen_by_ip = models.GenericIPAddressField()
     time_showed = models.DateTimeField(auto_now=True)
